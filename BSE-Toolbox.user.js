@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BSE Toolbox
 // @namespace    https://github.com/L0Lock/BSE-Toolbox
-// @version      0.0.3
+// @version      0.0.4
 // @description  Adds a floating window with message templates to Blender Stack Exchange sites.
 // @author       Loïc "L0Lock" Dautry
 // @match        *blender.stackexchange.com/questions/*/*
@@ -19,15 +19,42 @@
 (function () {
   let activeTextarea = null;
 
+  // Function to find the currently active textarea
+  function findActiveTextarea() {
+    // First try to use the stored activeTextarea if it's still valid
+    if (activeTextarea && document.contains(activeTextarea)) {
+      return activeTextarea;
+    }
+    
+    // Look for focused textarea
+    const focused = document.activeElement;
+    if (focused && focused.tagName === 'TEXTAREA') {
+      return focused;
+    }
+    
+    // Fallback to finding any textarea with wmd-input id
+    return document.getElementById('wmd-input') || document.querySelector('textarea');
+  }
+
   // Function to insert text at the end of the textarea with the ID "wmd-input"
   function insertTextAtEnd(text, textarea) {
+    if (!textarea) {
+      textarea = findActiveTextarea();
+    }
+    
     if (textarea) {
       const { selectionStart, selectionEnd } = textarea;
       textarea.value =
         textarea.value.substring(0, selectionStart) + text + textarea.value.substring(selectionEnd);
       textarea.selectionStart = selectionStart + text.length;
       textarea.selectionEnd = selectionStart + text.length;
+      
+      // Ensure the textarea stays focused and active
       textarea.focus();
+      activeTextarea = textarea;
+      
+      // Trigger input event to ensure any listeners are notified
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
     }
   }
 
@@ -67,14 +94,33 @@
       templates.forEach((template) => {
         const title = $("<div>", {
           text: template.title,
-          style: "cursor: pointer; margin-bottom: 5px;",
+          style: "cursor: pointer; margin-bottom: 5px; padding: 5px; border-radius: 3px;",
         });
 
-        title.on("mousedown", function () {
-          insertTextAtEnd(template.message, activeTextarea);
-          if (activeTextarea) {
-            activeTextarea.focus();
-          }
+        // Add hover effect
+        title.on("mouseenter", function() {
+          $(this).css("background-color", "#f0f0f0");
+        }).on("mouseleave", function() {
+          $(this).css("background-color", "");
+        });
+
+        // Use click instead of mousedown to avoid focus issues
+        title.on("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Find the target textarea
+          const targetTextarea = findActiveTextarea();
+          
+          // Insert the text
+          insertTextAtEnd(template.message, targetTextarea);
+          
+          // Small delay to ensure focus is maintained
+          setTimeout(() => {
+            if (targetTextarea) {
+              targetTextarea.focus();
+            }
+          }, 10);
         });
 
         content.append(title);
@@ -126,11 +172,17 @@
 
   observer.observe(document.body, { childList: true, subtree: true });
 
-  // Listen for clicks on the document to update the activeTextarea
+  // Listen for focus events on textareas to update activeTextarea
+  document.addEventListener("focus", function (event) {
+    if (event.target.tagName === "TEXTAREA") {
+      activeTextarea = event.target;
+    }
+  }, true);
+
+  // Also listen for clicks on textareas as backup
   document.addEventListener("click", function (event) {
-    const targetTextarea = event.target.closest("textarea");
-    if (targetTextarea && targetTextarea !== activeTextarea) {
-      activeTextarea = targetTextarea;
+    if (event.target.tagName === "TEXTAREA") {
+      activeTextarea = event.target;
     }
   });
 })();

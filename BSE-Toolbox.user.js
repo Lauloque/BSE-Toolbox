@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BSE Toolbox
 // @namespace    https://github.com/Lauloque/BSE-Toolbox
-// @version      0.0.5
+// @version      0.0.6
 // @description  Adds a floating window with message templates to Blender Stack Exchange sites.
 // @author       Loïc "Lauloque" Dautry
 // @match        *blender.stackexchange.com/questions/*/*
@@ -53,8 +53,8 @@
 
   function createFloatingWindow(templates) {
     const container = $("<div>", {
-      id: "oc-mod-panel",
-      class: "window",
+      id: "bse-toolbox-panel",
+      class: "bse-toolbox-window",
       style: "position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 9999; width: 300px; border: 1px solid #ccc; border-radius: 5px; padding: 0; background: #fff;",
     });
 
@@ -67,7 +67,7 @@
     );
 
     const content = $("<div>", {
-      id: "oc-mod-content",
+      id: "bse-toolbox-content",
       style: "padding: 10px; overflow-y: auto; max-height: 400px;",
     });
 
@@ -78,6 +78,7 @@
       templates.forEach((template) => {
         const title = $("<div>", {
           text: template.title,
+          class: "bse-toolbox-template-item",
           style: "cursor: pointer; margin-bottom: 2px; padding: 3px 5px; border-radius: 3px;",
         });
 
@@ -113,17 +114,25 @@
     $("body").append(container);
 
     container.draggable({
-      handle: ".header",
+      handle: ".bse-toolbox-header",
       stop: function () {
-        GM_setValue("modPosX", $(this).position().left);
-        GM_setValue("modPosY", $(this).position().top);
+        GM_setValue("bseToolboxPosX", $(this).position().left);
+        GM_setValue("bseToolboxPosY", $(this).position().top);
       },
     });
+
+    setTimeout(() => {
+      if (typeof feather !== 'undefined') {
+        feather.replace();
+      }
+    }, 100);
   }
 
   GM_addStyle(
-    "@import url('https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'); #oc-mod-panel .ui-draggable { cursor: move; }"
+    "@import url('https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'); #bse-toolbox-panel .ui-draggable { cursor: move; }"
   );
+
+  $('head').append('<script src="https://unpkg.com/feather-icons"></script>');
 
   fetch("https://raw.githubusercontent.com/Lauloque/BSE-Toolbox/main/templates.json")
     .then((response) => response.json())

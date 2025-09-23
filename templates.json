@@ -16,6 +16,12 @@
             "categories": ["Links"],
             "message": "[share your file](https://blender.meta.stackexchange.com/a/3051/53447)"
         },
+        {
+            "title": "🔗where to report a bug",
+            "targets": ["comment", "answer"],
+            "categories": ["Links"],
+            "message": "[Where To Report a Bug](https://blender.stackexchange.com/questions/1377/best-place-to-put-bug-reports)"
+        },
          
         {
             "title": "✉️Crash report",

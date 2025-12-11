@@ -1,2 +1,3 @@
 # BSE-Toolbox
-A userscript which provides a few messaging tools into blender.stackexchange.org.
+A userscript which provides a few messaging tools into blender.stackexchange.com
+

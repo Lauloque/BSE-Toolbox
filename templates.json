@@ -42,6 +42,12 @@
             "targets": ["comment"],
             "categories": ["Messages"],
             "message": "Hello and welcome. This site is not a regular forum, while commenting \"thanks\" is always nice, the best way to reward a good answer is to [upvote it](https://blender.stackexchange.com/help/why-vote), and if it completely solved your issue, [mark it as accepted](https://blender.stackexchange.com/help/accepted-answer) using the ✔️button."
+        },
+        {
+            "title": "Operators VS Data API",
+            "targets": ["comment", "answer"],
+            "categories": ["Links"],
+            "message": "Blender’s operators are tools for users to access, they can be accessed with Python but they still have limitations that make them cumbersome to use programmatically. Instead, it is recommended to manipulate the data API directly. See [Using Operators - Blender Python API](https://docs.blender.org/api/current/info_gotchas_operators.html) and [API Reference Usage - Blender Python API](https://docs.blender.org/api/current/info_api_reference.html)"
         }
     ]
 }

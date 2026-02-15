@@ -41,7 +41,7 @@
             "title": "✉️Thanks Comment",
             "targets": ["comment"],
             "categories": ["Messages"],
-            "message": "Hello and welcome. This site is not a regular forum, while commenting \"thanks\" is always nice, the best way to reward a good answer is to [upvote it](https://blender.stackexchange.com/help/why-vote), and if it completely solved your issue, [mark it as accepted](https://blender.stackexchange.com/help/accepted-answer) using the ✔️button."
+            "message": "Hello again, this site is a bit different from regular forums: while commenting "thanks" is always nice, the best way to reward a good answer is to [upvote it](https://blender.stackexchange.com/help/why-vote), and if it completely solved your issue, [mark it as accepted](https://blender.stackexchange.com/help/accepted-answer) using the ✔️ button."
         },
         {
             "title": "✉️Operators VS Data API",
